@@ -17,6 +17,69 @@ datasource db {
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 model User {
+  id        String      @id @default(uuid())
+  email     String    @unique
+  username  String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  groups    Group[]
+}
+
+model Group {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  inviteCode  String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  members     User[]    @relation("GroupMembers")
+  files       File[]
+}
+
+model File {
+  id          String      @id @default(uuid())
+  groupId     String      @db.Uuid
+  userId      String
+  fileName    String
+  filePath    String
+  fileType    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  group       Group     @relation("Files")
+  user        User      @relation("Files")
+  comments    Comment[]
+}
+
+
+model Comment {
+  id        String      @id @default(uuid())
+  fileId    String      @db.Uuid
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  file      File      @relation("Comments")
+  user      User      @relation("Comments")
+  reactions Reaction[]
+}
+
+
+model Reaction {
+  id        String      @id @default(uuid())
+  userId    String
+  commentId String?    @db.Uuid
+  fileId    String?    @db.Uuid
+  reaction  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comment   Comment? @relation("Reactions")
+  file      File?    @relation("Reactions")
+  user      User     @relation("Reactions")
+
+}
+
+model User {
   id             String          @id @default(cuid())
   email          String          @unique
   name           String
@@ -127,4 +190,26 @@ model ExpenseShare {
   paidAt     DateTime?
 
   @@unique([expenseId, userId])
+}
+
+model Activity {
+  id        String      @id @default(uuid())
+  groupId   String
+  userId    String
+  type      ActivityType
+  details   String?   //Details about the activity (JSON would be better but adds complexity)
+  fileId    String?
+  commentId String?
+  createdAt DateTime @default(now())
+  group     Group     @relation(fields: [groupId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  file      File?     @relation(fields: [fileId], references: [id])
+  comment   Comment?  @relation(fields: [commentId], references: [id])
+
+}
+
+enum ActivityType {
+  fileUpload
+  commentAdded
+  reactionAdded
 }
