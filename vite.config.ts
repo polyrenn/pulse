@@ -14,6 +14,10 @@ export default defineConfig({
         return defineRoutes((route) => {
           route("app", "app/layout.tsx", () => {
             route("", "app/home.tsx", { index: true });
+            route("groups", "app/groups/layout.tsx", () => {
+              route("", "app/groups/home.tsx", { index: true })
+              route("create", "app/groups/create.tsx")
+            })
           });
         });
       },
