@@ -31,7 +31,7 @@ export const loader: LoaderFunction = async (args) => {
   const groups = await db.group.findMany({ where: { groupMembers: { some: { user: { clerkId: user?.clerkId } }} } }) // Where UserID == Authed User
 
   if (!userId) {
-    return redirect('/app/auth/sign-in')
+    return redirect('/app/auth/sign-up')
   }
   
   return json({userId: user, groups: groups});
