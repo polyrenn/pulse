@@ -20,7 +20,8 @@ export default defineConfig({
             })
             route("auth", "app/auth/layout.tsx", () => {
               route("sign-up", "app/auth/sign-up.tsx")
-              route("sign-in", "app/groups/sign-in.tsx")
+              route("sign-in", "app/auth/sign-in.tsx")
+              route("sso-callback", "app/auth/sso-callback.tsx")
             })
           });
         });

@@ -1,10 +1,13 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import type { MetaFunction, LoaderFunction } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { Plus } from "lucide-react";
+import { getAuth } from "@clerk/remix/ssr.server";
+import { redirect, json, LoaderFunctionArgs } from "@remix-run/node";
 import { NewGroupDialog } from "~/components/new-group-dialog";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
+import { SignOutButton } from "~/components/sign-out-button";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,7 +16,20 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+
+
+export const loader: LoaderFunction = async (args) => {
+  const { userId: user } = await getAuth(args)
+  if (!user) {
+    return redirect('/app/auth/sign-in')
+  }
+  
+  return json({userId: user});
+}
+
+
 export default function App() {
+  const user = useLoaderData<typeof loader>()
   const groupList = [
     {
       groupId: "3244113e-1ba9-4937-835e-cd7b9121012c",
@@ -36,6 +52,8 @@ export default function App() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="max-w-2xl flex flex-col items-center gap-6 ">
         <div className="flex flex-wrap gap-4">
+          <p>Hello {user.userId}</p>
+          <SignOutButton/>
         {groupList.map((group) => (
           <Link to={`/gh/${group.groupId}`} >
            <div className="group flex  py-4 px-8 items-center gap-1  bg-gray-50 rounded-[24px] border border-[#efefef] hover:scale-105 transition-transform duration-200">
