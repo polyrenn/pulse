@@ -16,196 +16,10 @@ datasource db {
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-model User {
-  id        String      @id @default(uuid())
-  email     String    @unique
-  username  String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  groups    Group[]
-}
-
-model Group {
-  id          String      @id @default(uuid())
-  name        String
-  description String?
-  inviteCode  String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  members     User[]    @relation("GroupMembers")
-  files       File[]
-}
-
-model File {
-  id          String      @id @default(uuid())
-  groupId     String      @db.Uuid
-  userId      String
-  fileName    String
-  filePath    String
-  fileType    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  group       Group     @relation("Files")
-  user        User      @relation("Files")
-  comments    Comment[]
-}
-
-
-model Comment {
-  id        String      @id @default(uuid())
-  fileId    String      @db.Uuid
-  userId    String
-  text      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  file      File      @relation("Comments")
-  user      User      @relation("Comments")
-  reactions Reaction[]
-}
-
-
-model Reaction {
-  id        String      @id @default(uuid())
-  userId    String
-  commentId String?    @db.Uuid
-  fileId    String?    @db.Uuid
-  reaction  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  comment   Comment? @relation("Reactions")
-  file      File?    @relation("Reactions")
-  user      User     @relation("Reactions")
-
-}
-
-model User {
-  id             String          @id @default(cuid())
-  email          String          @unique
-  name           String
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  events         Event[]         @relation("EventCreator")
-  participations EventUser[]
-  files          File[]
-  expenses       Expense[]
-  expenseShares  ExpenseShare[]
-  groupsMember   GroupUser[]     // Groups the user is a member of
-  groupsOwned    Group[]         // Groups created/owned by the user
-}
-
-model Group {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  owner       User        @relation(fields: [ownerId], references: [id])
-  ownerId     String
-  members     GroupUser[]
-  events      Event[]
-  isPrivate   Boolean     @default(false)
-}
-
-model GroupUser {
-  id        String   @id @default(cuid())
-  group     Group    @relation(fields: [groupId], references: [id])
-  groupId   String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  role      GroupRole @default(MEMBER)
-  joinedAt  DateTime @default(now())
-
-  @@unique([groupId, userId])
-}
-
 enum GroupRole {
   ADMIN
   MODERATOR
   MEMBER
-}
-
-model Event {
-  id          String      @id @default(cuid())
-  title       String
-  description String?
-  startDate   DateTime?
-  endDate     DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  creator     User        @relation("EventCreator", fields: [creatorId], references: [id])
-  creatorId   String
-  group       Group?      @relation(fields: [groupId], references: [id])
-  groupId     String?
-  participants EventUser[]
-  files       File[]
-  expenses    Expense[]
-}
-
-model EventUser {
-  id        String   @id @default(cuid())
-  event     Event    @relation(fields: [eventId], references: [id])
-  eventId   String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  joinedAt  DateTime @default(now())
-
-  @@unique([eventId, userId])
-}
-
-model File {
-  id        String   @id @default(cuid())
-  name      String
-  url       String
-  type      String   // e.g., "document", "image", etc.
-  size      Int
-  uploadedAt DateTime @default(now())
-  event     Event    @relation(fields: [eventId], references: [id])
-  eventId   String
-  uploader  User     @relation(fields: [uploaderId], references: [id])
-  uploaderId String
-}
-
-model Expense {
-  id          String         @id @default(cuid())
-  description String
-  amount      Decimal
-  date        DateTime       @default(now())
-  event       Event          @relation(fields: [eventId], references: [id])
-  eventId     String
-  paidBy      User           @relation(fields: [paidById], references: [id])
-  paidById    String
-  shares      ExpenseShare[]
-  receiptUrl  String?
-}
-
-model ExpenseShare {
-  id         String   @id @default(cuid())
-  expense    Expense  @relation(fields: [expenseId], references: [id])
-  expenseId  String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  amount     Decimal
-  isPaid     Boolean  @default(false)
-  paidAt     DateTime?
-
-  @@unique([expenseId, userId])
-}
-
-model Activity {
-  id        String      @id @default(uuid())
-  groupId   String
-  userId    String
-  type      ActivityType
-  details   String?   //Details about the activity (JSON would be better but adds complexity)
-  fileId    String?
-  commentId String?
-  createdAt DateTime @default(now())
-  group     Group     @relation(fields: [groupId], references: [id])
-  user      User      @relation(fields: [userId], references: [id])
-  file      File?     @relation(fields: [fileId], references: [id])
-  comment   Comment?  @relation(fields: [commentId], references: [id])
-
 }
 
 enum ActivityType {
@@ -213,3 +27,101 @@ enum ActivityType {
   commentAdded
   reactionAdded
 }
+
+enum GroupType {
+  general
+  event
+}
+
+model User {
+  id        String    @id @db.Uuid @default(uuid())
+  email     String    @unique
+  username  String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  groups    Group[]
+  groupMembers GroupMembers[]
+  activity  Activity[]
+}
+
+model Group {
+  id          String      @id @db.Uuid @default(uuid())
+  name        String
+  description String?
+  inviteCode  String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  groupType   GroupType @default(general)
+  members     User[]
+  groupMembers GroupMembers[]    
+  activity    Activity[]
+}
+
+model GroupMembers {
+  userId     String @db.Uuid
+  groupId    String @db.Uuid
+  role       String @default("member")
+  joinedAt   DateTime @default(now())
+  user       User   @relation(fields: [userId], references: [id])
+  group      Group  @relation(fields: [groupId], references: [id])
+  
+  @@id([userId, groupId]) // Composite ID for many-to-many relationship
+}
+
+model File {
+  id          String      @id @db.Uuid @default(uuid())
+  groupId     String      @db.Uuid
+  userId      String      @db.Uuid
+  fileName    String
+  filePath    String
+  fileType    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  comments    Comment[]
+  reactions   Reaction[]
+  activity    Activity[]
+}
+
+
+model Comment {
+  id        String      @id @db.Uuid @default(uuid())
+  fileId    String      @db.Uuid
+  userId    String      @db.Uuid
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  file      File    @relation(fields: [fileId], references: [id])
+  activity  Activity[]
+}
+
+
+model Reaction {
+  id        String      @id @db.Uuid @default(uuid())
+  userId    String      @db.Uuid
+  commentId String?    @db.Uuid
+  fileId    String    @db.Uuid
+  reaction  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  file      File     @relation(fields: [fileId], references: [id])
+}
+
+
+
+
+model Activity {
+  id        String      @id @db.Uuid @default(uuid())
+  groupId   String      @db.Uuid
+  userId    String      @db.Uuid
+  type      ActivityType
+  details   String?
+  fileId    String?     @db.Uuid
+  commentId String?     @db.Uuid
+  createdAt DateTime @default(now())
+  group     Group     @relation(fields: [groupId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  file      File?     @relation(fields: [fileId], references: [id])
+  comment   Comment?  @relation(fields: [commentId], references: [id])
+}
+

@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Plus } from "lucide-react";
@@ -27,11 +27,7 @@ export function EmptyState() {
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-orange-100 rounded-full overflow-hidden">
-                <img
-                  src="/placeholder.svg?height=40&width=40"
-                  alt="User avatar"
-                  className="w-full h-full object-cover"
-                />
+                
               </div>
               <div className="w-10 h-10 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold">
                 ZS
@@ -50,11 +46,7 @@ export function EmptyState() {
                 JS
               </div>
               <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-                <img
-                  src="/placeholder.svg?height=40&width=40"
-                  alt="User avatar"
-                  className="w-full h-full object-cover"
-                />
+      
               </div>
             </div>
           </div>
@@ -66,11 +58,7 @@ export function EmptyState() {
               <div className="h-2 bg-gray-200 rounded w-2/3"></div>
             </div>
             <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <img
-                src="/placeholder.svg?height=40&width=40"
-                alt="User avatar"
-                className="w-full h-full object-cover"
-              />
+          
             </div>
           </div>
         </Card>
@@ -82,13 +70,13 @@ export function EmptyState() {
           the right people quicker.
         </p>
         <Link to={`create`}>
+        </Link>
+        <Dialog>
+          <DialogTrigger asChild>
             <Button className="bg-black text-white hover:bg-gray-800">
                   <Plus className="w-4 h-4 mr-2" />
                   Create a new Group
             </Button>
-        </Link>
-        <Dialog>
-          <DialogTrigger asChild>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -97,18 +85,20 @@ export function EmptyState() {
                 A group lets you collaborate with friends and share files.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid items-center gap-4">
-                <Input id="name" placeholder="evil rabbit study group" className="col-span-3" />
-              </div>
+            <Form action="/create-group" method="post">
+                <div className="grid gap-4 py-4">
+                  <div className="grid items-center gap-4">
+                    <Input name="group-name" id="name" placeholder="evil rabbit study group" className="col-span-3" />
+                  </div>
 
-              <div className="px-4 py-4 border-2 border-dotted border-[#efefef] rounded-[8px]">
-                <p className="text-sm text-gray-500">Cover image</p>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Create</Button>
-            </DialogFooter>
+                  <div className="px-4 py-4 border-2 border-dotted border-[#efefef] rounded-[8px]">
+                    <p className="text-sm text-gray-500">Cover image</p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit">Create</Button>
+                </DialogFooter>
+            </Form>
             <div className="absolute bottom-0">Hey</div>
           </DialogContent>
       
