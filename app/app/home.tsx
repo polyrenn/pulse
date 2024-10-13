@@ -8,6 +8,9 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { SignOutButton } from "~/components/sign-out-button";
+import { db } from "~/.server/db";
+import { Group } from "@prisma/client";
+import { getSession } from "~/session";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,12 +22,18 @@ export const meta: MetaFunction = () => {
 
 
 export const loader: LoaderFunction = async (args) => {
+  const session = await getSession(
+    args.request.headers.get("Cookie")
+  );
+
   const { userId: user } = await getAuth(args)
+  const groups = await db.group.findMany({ where: { groupMembers: { some: { user: { clerkId: "user_2nO3IIzvbWr75EPZEWeMQee34gt" } }} } }) // Where UserID == Authed User
+
   if (!user) {
     return redirect('/app/auth/sign-in')
   }
   
-  return json({userId: user});
+  return json({userId: user, groups: groups});
 }
 
 
@@ -52,12 +61,14 @@ export default function App() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="max-w-2xl flex flex-col items-center gap-6 ">
         <div className="flex flex-wrap gap-4">
-          <p>Hello {user.userId}</p>
-          <SignOutButton/>
-        {groupList.map((group) => (
-          <Link to={`/gh/${group.groupId}`} >
+          {
+            /* Remove in prod  <p>Hello {user.userId}</p>
+          <SignOutButton/> */ 
+          }
+        {user.groups.map((group: Group) => (
+          <Link key={`${group.name}`} to={`/gh/${group.id}`} >
            <div className="group flex  py-4 px-8 items-center gap-1  bg-gray-50 rounded-[24px] border border-[#efefef] hover:scale-105 transition-transform duration-200">
-            <h4 className="text-lg">{group.groupName}</h4>
+            <h4 className="text-lg">{group.name}</h4>
             {/* Members.map */}
             <div className="flex flex-row-reverse">
               <div className="relative border-2 border-gray-50 bg-gray-200 rounded-full overflow-hidden w-6 h-6 -ml-4"></div>

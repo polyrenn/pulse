@@ -33,16 +33,11 @@ export function NewGroupDialog() {
                   <div className="grid items-center gap-4">
                     <Input name="group-name" id="name" placeholder="evil rabbit study group" className="col-span-3" />
                   </div>
-
-                  <div className="px-4 py-4 border-2 border-dotted border-[#efefef] rounded-[8px]">
-                    <p className="text-sm text-gray-500">Cover image</p>
-                  </div>
                 </div>
                 <DialogFooter>
                   <Button type="submit">Create</Button>
                 </DialogFooter>
             </Form>
-            <div className="absolute bottom-0">Hey</div>
           </DialogContent>
       
         </Dialog>

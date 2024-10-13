@@ -1,5 +1,6 @@
 // app/routes/resources/groups.tsx
-import { json, ActionFunctionArgs, redirect } from '@remix-run/node'
+import { getAuth } from '@clerk/remix/ssr.server';
+import { json, ActionFunctionArgs, redirect, ActionFunction } from '@remix-run/node'
 import { db } from '~/.server/db'
 import { pinata } from "~/.server/pinata";
 
@@ -9,9 +10,13 @@ export async function loader() {
 
 
 // Server side action to handle upload
-export const action = async ({ request }: ActionFunctionArgs) => {
-	const formData = await request.formData();
+export const action:ActionFunction = async (args) => {
+
+    const { userId } = await getAuth(args)
+    const user = await db.user.findFirst({where: {clerkId: userId}})
+	const formData = await args.request.formData();
 	const file = formData.get("file") as File;
+    const groupId = formData.get("groupId") as string
 	const { cid, name, } = await pinata.upload.file(file);
 	const url = await pinata.gateways.createSignedURL({
 		cid: cid,
@@ -21,9 +26,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const addFile = await db.file.create({
         data: {
             fileName: name,
-            userId: "95c2d950-7afc-4771-8544-8d28c6504e2b", // will get from clerk auth session
-            groupId: "3244113e-1ba9-4937-835e-cd7b9121012c", // find a way to set group data with set
-            filePath: url     
+            userId: user?.id as string, // will get from clerk auth session
+            groupId: groupId, // find a way to set group data with set
+            filePath: url,
+            fileType: file.type    
         }
     })
 

@@ -12,7 +12,7 @@ export default function SignIn() {
   const signInWith = (strategy: OAuthStrategy) => {
     return signIn?.authenticateWithRedirect({
       strategy,
-      redirectUrl: '/app/auth/sign-up-sso-callback',
+      redirectUrl: '/app/auth/sso-callback',
       redirectUrlComplete: '/app',
     })
   }
