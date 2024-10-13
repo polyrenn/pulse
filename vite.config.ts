@@ -18,6 +18,10 @@ export default defineConfig({
               route("", "app/groups/home.tsx", { index: true })
               route("create", "app/groups/create.tsx")
             })
+            route("auth", "app/auth/layout.tsx", () => {
+              route("sign-up", "app/auth/sign-up.tsx")
+              route("sign-in", "app/groups/sign-in.tsx")
+            })
           });
         });
       },
