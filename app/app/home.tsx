@@ -26,10 +26,11 @@ export const loader: LoaderFunction = async (args) => {
     args.request.headers.get("Cookie")
   );
 
-  const { userId: user } = await getAuth(args)
-  const groups = await db.group.findMany({ where: { groupMembers: { some: { user: { clerkId: "user_2nO3IIzvbWr75EPZEWeMQee34gt" } }} } }) // Where UserID == Authed User
+  const { userId } = await getAuth(args)
+  const user = await db.user.findFirst({where: {clerkId: userId}})
+  const groups = await db.group.findMany({ where: { groupMembers: { some: { user: { clerkId: user?.clerkId } }} } }) // Where UserID == Authed User
 
-  if (!user) {
+  if (!userId) {
     return redirect('/app/auth/sign-in')
   }
   
@@ -60,6 +61,7 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="max-w-2xl flex flex-col items-center gap-6 ">
+      <h1 className="text-3xl">Your groups</h1>
         <div className="flex flex-wrap gap-4">
           {
             /* Remove in prod  <p>Hello {user.userId}</p>
@@ -82,14 +84,15 @@ export default function App() {
         <NewGroupDialog />
       </div>
       <Separator className="my-4" />
-      <div className="w-full max-w-md flex flex-col items-center space-y-0 mb-8">
-        <h2 className="text-2xl font-bold mb-2">Join a group</h2>
-        <p className="text-gray-600 mb-6 max-w-sm">
-          Got a link from a friend? Join and get in on the action
-        </p>
-
-        <div className="flex">
-          <Form className="flex" action="/join-group" method="post">
+      <div className="w-full max-w-md flex flex-col items-center space-y-2 mb-8">
+        <div className="flex flex-col items-center">
+            <h2 className="text-2xl font-bold mb-1">Join a group</h2>
+            <p className="text-gray-600 mb-6 max-w-sm">
+              Got a link from a friend? Join and get in on the action
+            </p>
+        </div>
+        <div className="flex my-4">
+          <Form className="flex gap-2" action="/join-group" method="post">
             <Input
               name="invite-code"
               id="invite-code"
