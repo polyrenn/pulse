@@ -1,6 +1,6 @@
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -13,10 +13,12 @@ import {
 
 import { Input } from "~/components/ui/input";
 export function NewGroupDialog() {
+  const navigation = useNavigation()
+  const isSubmitting = navigation.state === "submitting";
     return (
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="bg-black w-max text-white hover:bg-gray-800 rounded-full">
+            <Button className="w-max bg-[#FF7D52] hover:text-[#1a1a1a] hover:bg-transparent  text-white rounded-full">
                   <Plus className="w-4 h-4 mr-2" />
                   New group
             </Button>
@@ -35,7 +37,11 @@ export function NewGroupDialog() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Create</Button>
+                  
+                  <Button disabled={isSubmitting} className="active:scale-95 transition-transform duration-200" type="submit">
+                    {isSubmitting &&  <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSubmitting ? 'Creating' : 'Create'}
+                  </Button>
                 </DialogFooter>
             </Form>
           </DialogContent>

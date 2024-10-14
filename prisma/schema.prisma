@@ -26,6 +26,7 @@ enum ActivityType {
   fileUpload
   commentAdded
   reactionAdded
+  chatAdded
 }
 
 enum GroupType {

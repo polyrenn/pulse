@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Button } from "~/components/ui/button"
-import { Paperclip } from "lucide-react"
+import { Paperclip } from '@phosphor-icons/react'
 
 export function CustomFileInput() {
   const [file, setFile] = useState<File | null>(null)
@@ -32,12 +32,14 @@ export function CustomFileInput() {
       />
       <Button
         onClick={(e) => handleButtonClick(e)}
-        className="w-10 h-10 p-0"
+        className="shadow-none px-4 py-4 bg-[#f7f7f8] mx-2 hover:bg-[#f7f7f8]"
         aria-label="Open file dialog"
       >
-        <Paperclip className="h-5 w-5" />
+        <Paperclip color='#1a1a1a' className="w-4 h-4" />
       </Button>
-      {file && <p className="mt-2">Selected file: {file.name}</p>}
+      <div className={`${file ? 'block' : 'hidden'}  absolute -top-10 left-0 w-full `}>
+         {file && <p className="mt-2 text-purple-500 text-center align-middle">{`File selected: ${file.name} `}</p>}
+      </div>
     </>
   )
 }

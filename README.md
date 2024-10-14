@@ -1,40 +1,41 @@
-# Welcome to Remix!
+*This is a submission for the [The Pinata Challenge ](https://dev.to/challenges/pinata)*
 
-- 📖 [Remix docs](https://remix.run/docs)
+## What I Built
+CrewSpace is a collaborative hub for friend groups, that enables planning, and file sharing. It allows groups to upload files, manage shared documents, and have conversations, all within a centralized and easily accessible space.
 
-## Development
+## Demo
+**Try CrewSpace out here at https://pulse-flame-five.vercel.app/app**
 
-Run the dev server:
+Sign Up
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rmsodv48ngugnlfz8dl5.jpg)
 
-```shellscript
-npm run dev
-```
+Create Groups
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/3gka0m6i2lv6u06dm8lv.jpg)
 
-## Deployment
+Manage Groups - Create and Join with an invite code
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/vaxh7m0ld2wtgr9ks3ma.jpg)
 
-First, build your app for production:
+Collaborate on Files
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/vmybyly2y9mse7eorheb.jpg)
 
-```sh
-npm run build
-```
 
-Then run the app in production mode:
 
-```sh
-npm start
-```
+## My Code
+**Here's a link to the Github Repository for CrewSpace: https://github.com/polyrenn/pulse**
 
-Now you'll need to pick a host to deploy it to.
 
-### DIY
+## Tech Stack
+CrewSpace is built with:
+- Remix 
+- Pinata API for File Management
+- Supabase for Storage & User Management
+- Clerk for Auth
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+## More Details
+Pinata powers the file-uploading experience, allowing users to share files with their groups, and collaborate on them, managing permissions as well as downloads for storage. 
 
-Make sure to deploy the output of `npm run build`
 
-- `build/server`
-- `build/client`
 
-## Styling
+<!-- Don't forget to add a cover image (if you want). -->
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+<!-- Thanks for participating! -->

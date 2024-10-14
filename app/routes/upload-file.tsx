@@ -20,7 +20,7 @@ export const action:ActionFunction = async (args) => {
 	const { cid, name, } = await pinata.upload.file(file);
 	const url = await pinata.gateways.createSignedURL({
 		cid: cid,
-		expires: 60,
+		expires: 86400,
 	});
 
     const addFile = await db.file.create({
@@ -32,6 +32,17 @@ export const action:ActionFunction = async (args) => {
             fileType: file.type    
         }
     })
+
+     // Create the activity entry immediately after successful file creation:
+     await db.activity.create({
+        data: {
+          groupId: groupId,
+          userId: user?.id as string,
+          type: 'fileUpload',
+          details: `File ${name} uploaded.`,
+          fileId: addFile.id,
+        },
+      });
 
 	return json({ url });
 };
