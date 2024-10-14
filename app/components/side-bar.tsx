@@ -6,7 +6,12 @@ import { SetStateAction, useState } from "react";
 import { Card, CardContent, CardTitle, CardHeader } from "./ui/card";
 import { Progress } from "./ui/progress";
 
-import { FileText, FileImage, FilePdf, FileAudio, File, Copy } from "@phosphor-icons/react";
+import { FileText } from "@phosphor-icons/react/dist/csr/FileText"
+import { FileImage } from "@phosphor-icons/react/dist/csr/FileImage"
+import { FilePdf } from "@phosphor-icons/react/dist/csr/FilePdf"
+import { FileAudio } from "@phosphor-icons/react/dist/csr/FileAudio"
+import { File } from "@phosphor-icons/react/dist/csr/File"
+import { Copy } from "@phosphor-icons/react/dist/csr/Copy"
 import { GroupMembers } from "@prisma/client";
 
 interface SideBarProps {

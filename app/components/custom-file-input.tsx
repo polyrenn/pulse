@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Button } from "~/components/ui/button"
-import { Paperclip } from '@phosphor-icons/react'
+import { Paperclip } from "@phosphor-icons/react/dist/csr/Paperclip"
 
 export function CustomFileInput() {
   const [file, setFile] = useState<File | null>(null)

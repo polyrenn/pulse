@@ -11,16 +11,11 @@ import { redirect } from "@remix-run/node";
 
 import { getAuth } from "@clerk/remix/ssr.server";
 
-import {
-  Horse,
-  Heart,
-  Cube,
-  Paperclip,
-  ArrowUp,
-  Upload,
-  FileText,
-  Download,
-} from "@phosphor-icons/react";
+
+
+import { Upload } from "@phosphor-icons/react/dist/csr/Upload"
+import { FileText } from "@phosphor-icons/react/dist/csr/FileText"
+import { Download } from "@phosphor-icons/react/dist/csr/Download"
 
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Card, CardContent } from "~/components/ui/card";
